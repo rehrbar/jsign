@@ -16,11 +16,16 @@
 
 package net.jsign.pe;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import net.jsign.DigestAlgorithm;
+import net.jsign.asn1.authenticode.AuthenticodeObjectIdentifiers;
+import org.bouncycastle.asn1.cms.AttributeTable;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x509.X509ObjectIdentifiers;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.cms.SignerInformation;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.MessageDigest;
@@ -28,16 +33,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import net.jsign.DigestAlgorithm;
-import net.jsign.asn1.authenticode.AuthenticodeObjectIdentifiers;
-
-import org.bouncycastle.asn1.cms.AttributeTable;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.x509.X509ObjectIdentifiers;
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.SignerInformation;
 
 /**
  * Portable Executable File.
@@ -54,13 +49,18 @@ public class PEFile implements Closeable {
     /** The position of the PE header in the file */
     private final long peHeaderOffset;
 
-    private final File file;
-    private final ExtendedRandomAccessFile raf;
+    private final PEInput raf;
+
+
+
 
     public PEFile(File file) throws IOException {
-        this.file = file;
-        raf = new ExtendedRandomAccessFile(file, "rw");
-        
+        this(new PEInputLocalFile(file));
+    }
+
+    public PEFile(PEInput input) throws IOException {
+        this.raf = input;
+
         // DOS Header
         
         byte[] buffer = new byte[2];
@@ -574,9 +574,9 @@ public class PEFile implements Closeable {
      */
     public void printInfo(PrintWriter out) {
         out.println("PE File");
-        out.println("  Name:          " + file.getName());
-        out.println("  Size:          " + file.length());
-        out.println("  Last Modified: " + new Date(file.lastModified()));
+        out.println("  Name:          " + raf.getName());
+        out.println("  Size:          " + raf.length());
+        out.println("  Last Modified: " + new Date(raf.lastModified()));
         out.println();
         
         out.println("PE Header");
