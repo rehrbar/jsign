@@ -209,6 +209,7 @@ public class PESigner {
         SignerInfoGeneratorBuilder signerInfoGeneratorBuilder = new SignerInfoGeneratorBuilder(digestCalculatorProvider);
         signerInfoGeneratorBuilder.setSignedAttributeGenerator(attributeTableGenerator);
         SignerInfoGenerator signerInfoGenerator = signerInfoGeneratorBuilder.build(shaSigner, certificate);
+
         
         AuthenticodeSignedDataGenerator generator = new AuthenticodeSignedDataGenerator();
         generator.addCertificates(new JcaCertStore(removeRoot(chain)));

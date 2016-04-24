@@ -543,7 +543,7 @@ public class PEFile implements Closeable {
         return signatures;
     }
 
-    private synchronized List<CertificateTableEntry> getCertificateTable() {
+    public synchronized List<CertificateTableEntry> getCertificateTable() {
         List<CertificateTableEntry> entries = new ArrayList<CertificateTableEntry>();
         DataDirectory certificateTable = getDataDirectory(DataDirectoryType.CERTIFICATE_TABLE);
         
