@@ -44,7 +44,7 @@ public class SignedHashInfo {
             } else if (ids.equals(andersId)) {
                 anders = d.toString();
             } else {
-                System.err.println("Unknown Field Type");
+                //System.err.println("Unknown Field Type");
             }
 
         }
@@ -59,7 +59,7 @@ public class SignedHashInfo {
         } else if (fieldName.equals("OSAttr")) {
             osAttr = fieldValue;
         } else {
-            System.out.println("Unknown Attribute: " + fieldName);
+            //System.out.println("Unknown Attribute: " + fieldName);
         }
     }
 
