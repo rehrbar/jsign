@@ -95,7 +95,7 @@ public class PEVerifier {
         return true;
     }
 
-    private static X509CertificateHolder getSignerCertificate(PEFile file, CMSSignedData signedData) throws CMSException {
+    public static X509CertificateHolder getSignerCertificate(PEFile file, CMSSignedData signedData) throws CMSException {
         Store certStore = getCertificates(file);
         SignerId signerInfo = signedData.getSignerInfos().getSigners().iterator().next().getSID();
 
