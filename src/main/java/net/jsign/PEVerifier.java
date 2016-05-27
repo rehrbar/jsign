@@ -95,7 +95,7 @@ public class PEVerifier {
         return true;
     }
 
-    public static X509CertificateHolder getSignerCertificate(PEFile file, CMSSignedData signedData) throws CMSException {
+    private static X509CertificateHolder getSignerCertificate(PEFile file, CMSSignedData signedData) throws CMSException {
         Store certStore = getCertificates(file);
         SignerId signerInfo = signedData.getSignerInfos().getSigners().iterator().next().getSID();
 
@@ -133,5 +133,13 @@ public class PEVerifier {
         ASN1Encodable digestValue = ASN1Sequence.getInstance(digestKarl).getObjectAt(1);
         ASN1OctetString digestValueString = ASN1OctetString.getInstance(digestValue);
         return digestValueString.getOctets();
+    }
+    
+    public X509CertificateHolder getCert() {
+        try {
+            return getSignerCertificate(peFile, getSignedData(peFile))
+        } catch (CMSException e) {
+            return null;
+        }   
     }
 }
