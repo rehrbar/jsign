@@ -137,7 +137,7 @@ public class PEVerifier {
     
     public X509CertificateHolder getCert() {
         try {
-            return getSignerCertificate(peFile, getSignedData(peFile))
+            return getSignerCertificate(peFile, getSignedData(peFile));
         } catch (CMSException e) {
             return null;
         }   
