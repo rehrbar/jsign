@@ -80,8 +80,10 @@ public class PEVerifier {
     }
 
     private CMSSignedData getSignedData(PEFile file) throws CMSException {
+        if(file.getCertificateTable().size() == 0) {
+            throw new CMSException("No Certificate Table Entry");
+        }
         CertificateTableEntry certificateTableEntry = file.getCertificateTable().get(0);
-
         return certificateTableEntry.getSignature();
     }
 
