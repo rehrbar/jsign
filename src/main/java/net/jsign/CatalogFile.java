@@ -4,12 +4,15 @@ import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.*;
+import org.bouncycastle.util.Selector;
 import org.bouncycastle.util.Store;
 import sun.misc.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -94,6 +97,27 @@ public class CatalogFile {
 
     public X509CertificateHolder getCert() {
         return cert;
+    }
+
+    public Collection<X509CertificateHolder> getCerts() throws CMSException {
+        Collection<X509CertificateHolder> certs = new ArrayList<>();
+        // TODO can we replace this entire class and implement the correct verification inside Jsign?
+        // TODO bring certificates in order to support openssl verification (starting with root, ending with signing certificate).
+        signedData.getCertificates().getMatches(new Selector() {
+            @Override
+            public boolean match(Object o) {
+                if(!(o instanceof X509CertificateHolder)) {
+                    return false;
+                }
+                return true;
+            }
+
+            @Override
+            public Object clone() {
+                return null;
+            }
+        }).forEach(o -> {certs.add((X509CertificateHolder)o);});
+        return certs;
     }
 }
 
