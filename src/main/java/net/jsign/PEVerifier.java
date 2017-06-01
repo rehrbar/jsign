@@ -12,10 +12,13 @@ import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerId;
 import org.bouncycastle.util.Arrays;
+import org.bouncycastle.util.Selector;
 import org.bouncycastle.util.Store;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -143,5 +146,26 @@ public class PEVerifier {
         } catch (CMSException e) {
             return null;
         }   
+    }
+
+
+    public Collection<X509CertificateHolder> getCerts() throws CMSException {
+        Collection<X509CertificateHolder> certs = new ArrayList<>();
+        // TODO remove duplicated code
+        getSignedData(peFile).getCertificates().getMatches(new Selector() {
+            @Override
+            public boolean match(Object o) {
+                if(!(o instanceof X509CertificateHolder)) {
+                    return false;
+                }
+                return true;
+            }
+
+            @Override
+            public Object clone() {
+                return null;
+            }
+        }).forEach(o -> {certs.add((X509CertificateHolder)o);});
+        return certs;
     }
 }

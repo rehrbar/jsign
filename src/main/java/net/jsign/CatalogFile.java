@@ -101,8 +101,7 @@ public class CatalogFile {
 
     public Collection<X509CertificateHolder> getCerts() throws CMSException {
         Collection<X509CertificateHolder> certs = new ArrayList<>();
-        // TODO can we replace this entire class and implement the correct verification inside Jsign?
-        // TODO bring certificates in order to support openssl verification (starting with root, ending with signing certificate).
+        // TODO remove duplicated code
         signedData.getCertificates().getMatches(new Selector() {
             @Override
             public boolean match(Object o) {
